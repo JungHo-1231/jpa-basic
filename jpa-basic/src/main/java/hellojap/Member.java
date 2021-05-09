@@ -6,7 +6,7 @@ import jdk.nashorn.internal.objects.annotations.Setter;
 import javax.persistence.*;
 
 @Entity
-public class Member {
+public class Member extends BaseEntity {
     public void setTeam(Team team) {
         this.team = team;
     }
@@ -18,7 +18,7 @@ public class Member {
     @Column(name = "name")
     private String username;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     private Team team;
 

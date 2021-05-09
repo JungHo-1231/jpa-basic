@@ -5,6 +5,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -17,28 +18,21 @@ public class JpaMain {
         tx.begin();
 
         try{
-            // 저장
+
             Team team = new Team();
-            team.setName("TeamA");
+            team.setName("teamA");
             em.persist(team);
 
-            Member member = new Member();
-            member.setUsername("member1");
-//            member.changeTeam(team);
-//            team.getMembers().add(member);
-            em.persist(member);
-
-            team.addMember(member);
+            Member member1 = new Member();
+            member1.setUsername("hello1");
+            member1.setTeam(team);
+            em.persist(member1);
 
             em.flush();
             em.clear();
 
-            Team findTeam = em.find(Team.class, team.getId());
-            List<Member> members = findTeam.getMembers();
-
-            for (Member m : members) {
-                System.out.println("m = " + m.getUsername());
-            }
+            List<Member> members = em.createQuery("select m from Member m join fetch m.team", Member.class)
+                    .getResultList();
 
             tx.commit();
         } catch (Exception e){
